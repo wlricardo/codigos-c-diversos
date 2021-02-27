@@ -114,8 +114,17 @@ int main(int argc, char const *argv[])
     // Construção das classes    
     c = (Classe*)calloc(k, sizeof(Classe));
     if (c == NULL) {
-        printf("\n\n Erro de alocação de memória !\n\n");        
+        printf("\n\n Erro de alocação de memória !\n\n");                
     }
+
+    Linf = menor;
+    for (int i = 0; i < k; i++) {   
+        Lsup = Linf+ac;     
+        c[i].F = freq_absoluta(tabela, ac, Linf, Lsup);
+        printf("\n Total de elemento na %da Classe: %d", i+1, c[i].F);
+        Linf = Lsup;
+    }
+    
 
     Linf = menor;
     for (int i = 0; i < k; i++) {
