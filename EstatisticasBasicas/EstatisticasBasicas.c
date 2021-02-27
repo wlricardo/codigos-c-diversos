@@ -69,6 +69,7 @@ int main(int argc, char const *argv[])
     int at, ac;         // A amplitude total e a amplitude de classe, respectivamente
     Classe *c;          // Cria uma estrutura do tipo Classe
     int Linf, Lsup;     // Limites inferior e superior da classe   
+    int fac;            // Variável auxiliar para calcular a freq. acumulada das classes
     float num;          // Um valor real para auxiliar no cálculo da amplitude de classe (ac)         
 
     printf("\n Quantos dados tem sua tabela ? \n > ");
@@ -118,20 +119,25 @@ int main(int argc, char const *argv[])
     }
 
     Linf = menor;
+    fac = 0;
     for (int i = 0; i < k; i++) {   
-        Lsup = Linf+ac;     
-        c[i].F = freq_absoluta(tabela, ac, Linf, Lsup);
-        printf("\n Total de elemento na %da Classe: %d", i+1, c[i].F);
-        Linf = Lsup;
+        Lsup = Linf+ac;             
+        c[i].F = freq_absoluta(tabela, ac, Linf, Lsup);    // Calcula a freq. absoluta da classe
+        c[i].Fac = fac + c[i].F;                           // Calcula a freq. acumulada da classe 
+        printf("\n %3d [-- %3d ", Linf, Lsup);             // Exibe os intervalos de classes
+        printf(" %3d", c[i].F);                            // Exibe a freq. absoluta da classe
+        printf(" %3d", c[i].Fac);                          // Exibe a freq. acumulada da classe
+        Linf = Lsup;        
+        fac = c[i].Fac;
     }
     
 
-    Linf = menor;
+    /*Linf = menor;
     for (int i = 0; i < k; i++) {
         Lsup = Linf+ac;
         printf("\n %3d [-- %3d ", Linf, Lsup);
         Linf = Lsup;        
-    }
+    }*/
         
     
 
