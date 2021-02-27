@@ -54,7 +54,7 @@ int freq_absoluta(int *lista, int tamanho, int inf, int sup) {
     return total; 
 }
 
-
+// ***** INÍCIO DO PROGRAMA *****
 
 int main(int argc, char const *argv[])
 {    
@@ -67,8 +67,9 @@ int main(int argc, char const *argv[])
     int k;              // Informa o número de classes após dados serem agrupados
     int maior, menor;   // O maior e o menor, respectivamente, valores da tabela
     int at, ac;         // A amplitude total e a amplitude de classe, respectivamente
-    Classe *c;           // Cria uma estrutura do tipo Classe
-    int Linf, Lsup;     // Limites inferior e superior da classe            
+    Classe *c;          // Cria uma estrutura do tipo Classe
+    int Linf, Lsup;     // Limites inferior e superior da classe   
+    float num;          // Um valor real para auxiliar no cálculo da amplitude de classe (ac)         
 
     printf("\n Quantos dados tem sua tabela ? \n > ");
     scanf("%d", &n);
@@ -80,7 +81,7 @@ int main(int argc, char const *argv[])
     }
     
     for (int i = 0; i < n; i++) {
-        tabela[i] = 30 + (rand()%100);
+        tabela[i] = 30 + (rand()%110);
     }
 
     // Imprimindo os dados gerados
@@ -92,26 +93,37 @@ int main(int argc, char const *argv[])
         }        
     }    
     
-    // Cálculo das variáveis auxiliares para construir o agrupamento de dados
-    k = round(sqrt(n));
+    // Cálculo das variáveis auxiliares para construir o agrupamento de dados    
+    k = roundf(sqrt(n));
     maior = maior_valor(tabela, n);
     menor = menor_valor(tabela, n);
     at = maior-menor;
-    ac = round(at/k);
+    ac = ceil(at/(1.0*k));
 
     printf("\n\n");    
     printf("\n >> Preparacao para agrupamento de dados:");
     printf("\n");    
-    printf("\n  > Total de dados...................: %d", n);
-    printf("\n  > Numero de classes................: %d", k);
+    printf("\n  > Total de dados (n)...............: %d", n);
+    printf("\n  > Numero de classes (k)............: %d", k);
     printf("\n  > Menor valor da tabela de dados...: %d", menor);    
     printf("\n  > Maior valor da tabela de dados...: %d", maior);   
-    printf("\n  > Amplitude total..................: %d", at);
-    printf("\n  > Amplitude de classe..............: %d", ac);
+    printf("\n  > Amplitude total (at).............: %d", at);
+    printf("\n  > Amplitude de classe (ac).........: %d", ac);
     printf("\n\n");  
 
     // Construção das classes    
-    
+    c = (Classe*)calloc(k, sizeof(Classe));
+    if (c == NULL) {
+        printf("\n\n Erro de alocação de memória !\n\n");        
+    }
+
+    Linf = menor;
+    for (int i = 0; i < k; i++) {
+        Lsup = Linf+ac;
+        printf("\n %3d [-- %3d ", Linf, Lsup);
+        Linf = Lsup;        
+    }
+        
     
 
         
