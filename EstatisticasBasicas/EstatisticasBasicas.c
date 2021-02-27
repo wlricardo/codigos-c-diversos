@@ -125,9 +125,13 @@ int main(int argc, char const *argv[])
         c[i].F = freq_absoluta(tabela, ac, Linf, Lsup);    // Calcula a freq. absoluta da classe
         c[i].Fac = fac + c[i].F;                           // Calcula a freq. acumulada da classe 
         c[i].xi = (Linf+Lsup)/2.0;                         // Calcula o ponto médio da classe
-        printf("\n %3d [-- %3d ", Linf, Lsup);             // Exibe os intervalos de classes
-        printf(" %3d", c[i].F);                            // Exibe a freq. absoluta da classe
-        printf(" %3d", c[i].Fac);                          // Exibe a freq. acumulada da classe
+        if (Lsup == maior) {
+            printf("\n %3d [--] %3d ", Linf, Lsup);        // Exibe os intervalos de classes
+        } else {
+            printf("\n %3d [--  %3d ", Linf, Lsup);        // Exibe os intervalos de classes
+        }
+        printf("%6d", c[i].F);                             // Exibe a freq. absoluta da classe
+        printf("%6d", c[i].Fac);                           // Exibe a freq. acumulada da classe
         printf("\t%6.2f", c[i].xi);                        // Exibe o ponto médio da classe
         Linf = Lsup;        
         fac = c[i].Fac;
