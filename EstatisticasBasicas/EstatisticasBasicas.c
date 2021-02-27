@@ -118,6 +118,7 @@ int main(int argc, char const *argv[])
         printf("\n\n Erro de alocação de memória !\n\n");                
     }
 
+    // Exibição da tabela com os dados agrupados em classes
     Linf = menor;
     fac = 0;
     for (int i = 0; i < k; i++) {   
@@ -126,9 +127,9 @@ int main(int argc, char const *argv[])
         c[i].Fac = fac + c[i].F;                           // Calcula a freq. acumulada da classe 
         c[i].xi = (Linf+Lsup)/2.0;                         // Calcula o ponto médio da classe
         if (Lsup == maior) {
-            printf("\n %3d [--] %3d ", Linf, Lsup);        // Exibe os intervalos de classes
+            printf("\n %3d [--] %-3d ", Linf, Lsup);        // Exibe o intervalo de classe caso o maior seja igual ao Lsup da última classe
         } else {
-            printf("\n %3d [--  %3d ", Linf, Lsup);        // Exibe os intervalos de classes
+            printf("\n %3d [--) %-3d ", Linf, Lsup);        // Exibe os intervalos de classes
         }
         printf("%6d", c[i].F);                             // Exibe a freq. absoluta da classe
         printf("%6d", c[i].Fac);                           // Exibe a freq. acumulada da classe
