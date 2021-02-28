@@ -54,6 +54,73 @@ int freq_absoluta(int *lista, int tamanho, int inf, int sup) {
     return total; 
 }
 
+// Determina o limite inferior de uma classe
+int lim_inferior(Classe *c, int menor, int classe, int ampl_classe) {
+    int linf;
+
+    linf = menor + ((classe-1)*ampl_classe);
+    return linf;
+}
+
+// Determina o limite superior de uma classe
+/*int lim_inferior(Classe *c, int menor, int classe, int ampl_classe) {
+    int linf;
+
+    linf = menor + ((classe-1)*ampl_classe);
+    return linf;
+}*/
+
+// Calcula a media
+float media(Classe *classe, int amp_classe, int tam_amostra) {
+    float media=0.0;
+    for (int i = 0; i < amp_classe; i++) {
+        media += (classe[i].F * classe[i].xi);        
+    }
+    media /= (1.0*tam_amostra);
+    return media;    
+}
+
+// Procura a Classe Modal
+int classe_modal(Classe *classe, int num_classes) {
+    int classe_modal = classe[0].F;
+    for (int i = 1; i < num_classes; i++) {
+        classe[i].F > classe_modal;
+        classe_modal = classe[i].F;
+    }
+    return classe_modal;
+}
+
+// Calcula a moda
+float moda(Classe *classe, int c_modal, int h, int k) {
+    float moda=0.0;    
+    int li;                 // Limite inferior da classe modal    
+    int fx;                 // Freq. absoluta da classe anterior à classe modal
+    int f;                  // Freq. absoluta da classe model
+    int fy;                 // Freq. absoluta da classe posterior à classe modal
+
+    if (c_modal == 1) {     // Significa que a classe modal é a 1a
+        fx = 0;             // Como é a 1a classe, não haverá freq. absoluta anterior a ela
+    } else {
+        fx = classe[c_modal-1].F;
+    }
+
+    if (c_modal == k) {     // Significa que a classe modal é a última
+        fy = 0;             // Como é a última classe, não haverá freq. absoluta posterior a ela
+    } else {
+        fy = classe[c_modal+1].F;
+    }
+    
+    f = classe[c_modal].F;
+    li = lim_inferior(classe, c_modal, h, k);
+    
+    moda = (1.0*(f - fx));     // Multiplico por 1.0 apenas para garantir que o valor seja real
+    moda /= ((f-fx)+(f-fy));
+    moda += li;
+
+    return moda;
+
+}
+
 // ***** INÍCIO DO PROGRAMA *****
 
 int main(int argc, char const *argv[])
@@ -70,7 +137,8 @@ int main(int argc, char const *argv[])
     Classe *c;          // Cria uma estrutura do tipo Classe
     int Linf, Lsup;     // Limites inferior e superior da classe   
     int fac;            // Variável auxiliar para calcular a freq. acumulada das classes
-    float num;          // Um valor real para auxiliar no cálculo da amplitude de classe (ac)         
+    int c_modal;       // Classe normal
+    float num;          // Um valor real para auxiliar no cálculo da amplitude de classe (ac)    
 
     printf("\n Quantos dados tem sua tabela ? \n > ");
     scanf("%d", &n);
@@ -127,18 +195,23 @@ int main(int argc, char const *argv[])
         c[i].Fac = fac + c[i].F;                           // Calcula a freq. acumulada da classe 
         c[i].xi = (Linf+Lsup)/2.0;                         // Calcula o ponto médio da classe
         if (Lsup == maior) {
-            printf("\n %3d [--] %-3d ", Linf, Lsup);        // Exibe o intervalo de classe caso o maior seja igual ao Lsup da última classe
+            printf("\n %3d [--] %-3d ", Linf, Lsup);       // Exibe o intervalo de classe caso o maior seja igual ao Lsup da última classe
         } else {
-            printf("\n %3d [--) %-3d ", Linf, Lsup);        // Exibe os intervalos de classes
+            printf("\n %3d [--) %-3d ", Linf, Lsup);       // Exibe os intervalos de classes
         }
         printf("%6d", c[i].F);                             // Exibe a freq. absoluta da classe
         printf("%6d", c[i].Fac);                           // Exibe a freq. acumulada da classe
-        printf("\t%6.2f", c[i].xi);                        // Exibe o ponto médio da classe
+        printf("\t%6.2f", c[i].xi);                        // Exibe o ponto médio da classe        
         Linf = Lsup;        
         fac = c[i].Fac;
     }
+
+    c_modal = classe_modal(c, k);
+    printf("\n\n--------------------------------------------");
+    printf("\n Media...: %-7.4f", media(c, k, n));              // Calcula e exibe a média dos dados amostrais
+    printf("\n Moda....: %-7.2f", moda(c, c_modal, ac, k));
+
     
     printf("\n\n\n");
     return 0;
 }
-
