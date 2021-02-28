@@ -62,14 +62,6 @@ int lim_inferior(Classe *c, int menor, int classe, int ampl_classe) {
     return linf;
 }
 
-// Determina o limite superior de uma classe
-/*int lim_inferior(Classe *c, int menor, int classe, int ampl_classe) {
-    int linf;
-
-    linf = menor + ((classe-1)*ampl_classe);
-    return linf;
-}*/
-
 // Calcula a media
 float media(Classe *classe, int amp_classe, int tam_amostra) {
     float media=0.0;
@@ -82,43 +74,55 @@ float media(Classe *classe, int amp_classe, int tam_amostra) {
 
 // Procura a Classe Modal
 int classe_modal(Classe *classe, int num_classes) {
-    int classe_modal = classe[0].F;
+    int classe_modal = 0;
+    int maior_freq = classe[0].F;
+    int maior_freq_ac = classe[0].Fac;
     for (int i = 1; i < num_classes; i++) {
-        classe[i].F > classe_modal;
-        classe_modal = classe[i].F;
+        if (classe[i].F > maior_freq && classe[i].Fac > maior_freq_ac) {
+            maior_freq = classe[i].F;
+            maior_freq_ac = classe[i].Fac;
+            classe_modal = i;
+        }        
     }
     return classe_modal;
 }
 
 // Calcula a moda
-float moda(Classe *classe, int c_modal, int h, int k) {
+float moda(Classe *classe, int h, int k, int menor) {
     float moda=0.0;    
+    int c_modal;
     int li;                 // Limite inferior da classe modal    
     int fx;                 // Freq. absoluta da classe anterior à classe modal
     int f;                  // Freq. absoluta da classe model
     int fy;                 // Freq. absoluta da classe posterior à classe modal
 
-    if (c_modal == 1) {     // Significa que a classe modal é a 1a
+    c_modal = classe_modal(classe, k);
+    if (c_modal == 0) {     // Significa que a classe modal é a 1a
         fx = 0;             // Como é a 1a classe, não haverá freq. absoluta anterior a ela
     } else {
         fx = classe[c_modal-1].F;
     }
 
-    if (c_modal == k) {     // Significa que a classe modal é a última
+    if (c_modal+1 == k) {   // Significa que a classe modal é a última
         fy = 0;             // Como é a última classe, não haverá freq. absoluta posterior a ela
     } else {
         fy = classe[c_modal+1].F;
     }
     
     f = classe[c_modal].F;
-    li = lim_inferior(classe, c_modal, h, k);
+    c_modal += 1;
+    li = lim_inferior(classe, menor, c_modal, h);
     
-    moda = (1.0*(f - fx));     // Multiplico por 1.0 apenas para garantir que o valor seja real
+    moda = h*(1.0*(f - fx));     // Multiplico por 1.0 apenas para garantir que o valor seja real
     moda /= ((f-fx)+(f-fy));
     moda += li;
 
     return moda;
+}
 
+// Cálculo da mediana
+float mediana(Classe *classe, int num_classes, int h) {
+    
 }
 
 // ***** INÍCIO DO PROGRAMA *****
@@ -137,7 +141,7 @@ int main(int argc, char const *argv[])
     Classe *c;          // Cria uma estrutura do tipo Classe
     int Linf, Lsup;     // Limites inferior e superior da classe   
     int fac;            // Variável auxiliar para calcular a freq. acumulada das classes
-    int c_modal;       // Classe normal
+    //int c_modal;        // Classe normal
     int esp_char;
     float num;          // Um valor real para auxiliar no cálculo da amplitude de classe (ac)    
     
@@ -173,7 +177,7 @@ int main(int argc, char const *argv[])
 
     printf("\n\n");    
     printf("\n >> Preparacao para agrupamento de dados:");
-    printf("\n-----------------------------------------");    
+    printf("\n---------------------------------------------");    
     printf("\n  > Total de dados (n)...............: %d", n);
     printf("\n  > Numero de classes (k)............: %d", k);
     printf("\n  > Menor valor da tabela de dados...: %d", menor);    
@@ -200,7 +204,7 @@ int main(int argc, char const *argv[])
             printf("%c", 196);          // Moldura da parte superior
         }
     }
-    printf("%c", 191);                  // Moldura do canto superior direito
+    printf("%c", 191);                                     // Moldura do canto superior direito
     for (int i = 0; i < k; i++) {           
         Lsup = Linf+ac;             
         c[i].F = freq_absoluta(tabela, ac, Linf, Lsup);    // Calcula a freq. absoluta da classe
@@ -227,10 +231,10 @@ int main(int argc, char const *argv[])
     }
     printf("%c", 217);              // Moldura do canto inferior direito
 
-    c_modal = classe_modal(c, k);
-    printf("\n\n\n--------------------------------------------");
-    printf("\n Media...: %-7.4f", media(c, k, n));              // Calcula e exibe a média dos dados amostrais
-    printf("\n Moda....: %-7.2f", moda(c, c_modal, ac, k));
+    // Exibição da média, moda, mediana, variância, desvio-padrão e coeficiente de variação
+    //c_modal = classe_modal(c, k);
+    printf("\n\n   Media...: %-7.4f", media(c, k, n));                     // Calcula e exibe a média dos dados amostrais
+    printf("\n   Moda....: %-7.2f", moda(c, ac, k, menor));     // Calcula e exibe a moda dos dados amostrais
 
     
     printf("\n\n\n");
