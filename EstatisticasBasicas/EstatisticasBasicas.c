@@ -124,9 +124,9 @@ float moda(Classe *classe, int h, int k, int menor) {
 int classe_mediana(Classe *classe, int num_amostras) {
     int classe_mediana = 0;
     int i = 0;
-    float p;
+    intptr_t p;
 
-    p = roundf(num_amostras/2.0);
+    p = (int)roundf(num_amostras/2.0);
     while (classe[i].Fac < p) {
         i++;
     }
@@ -145,7 +145,7 @@ float mediana(Classe *classe, int num_classes, int h, int menor, int num_amostra
 
     c_mediana = classe_mediana(classe, num_amostras);
     li = lim_inferior(classe, menor, c_mediana, h);
-    p = roundf(num_amostras/2.0);
+    p = (int)roundf(num_amostras/2.0);
 
     // Determinação da classe mediana acumulada anterior a da classe mediana
     c_mediana--;
@@ -208,11 +208,11 @@ int main(int argc, char const *argv[])
     }    
     
     // Cálculo das variáveis auxiliares para construir o agrupamento de dados    
-    k = roundf(sqrt(n));
+    k = (int)roundf(sqrt(n));
     maior = maior_valor(tabela, n);
     menor = menor_valor(tabela, n);
     at = maior-menor;
-    ac = ceil(at/(1.0*k));
+    ac = (int)ceil(at/(1.0*k));
 
     printf("\n\n");    
     printf("\n >> Preparacao para agrupamento de dados:");
@@ -238,9 +238,9 @@ int main(int argc, char const *argv[])
     printf("\n%c", 218);            // Moldura do canto superior esquerdo
     for (int  i = 0; i < 46; i++) {
         if (i==14 || i==22 || i==30) {
-            printf("%c", 194);          // Moldura da parte interna
+            printf("%c", 194);     // Moldura da parte interna
         } else {
-            printf("%c", 196);          // Moldura da parte superior
+            printf("%c", 196);     // Moldura da parte superior
         }
     }
     printf("%c", 191);                                     // Moldura do canto superior direito
