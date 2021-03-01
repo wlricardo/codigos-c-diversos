@@ -249,11 +249,11 @@ int main(int argc, char const *argv[])
         c[i].F = freq_absoluta(tabela, ac, Linf, Lsup);    // Calcula a freq. absoluta da classe
         c[i].Fac = fac + c[i].F;                           // Calcula a freq. acumulada da classe 
         c[i].xi = (Linf+Lsup)/2.0;                         // Calcula o ponto médio da classe
-        if (Lsup == maior) {
-            printf("\n%c %3d [--] %-3d %c", 179, Linf, Lsup, 179);       // Exibe o intervalo de classe caso o maior seja igual ao Lsup da última classe
-        } else {
+        //if (Lsup == maior) {
+            //printf("\n%c %3d [--] %-3d %c", 179, Linf, Lsup, 179);     // Exibe o intervalo de classe caso o maior seja igual ao Lsup da última classe
+        //} else {
             printf("\n%c %3d [--) %-3d %c", 179, Linf, Lsup, 179);       // Exibe os intervalos de classes
-        }
+        //}
         printf("%6d %c", c[i].F, 179);                             // Exibe a freq. absoluta da classe
         printf("%6d %c", c[i].Fac, 179);                           // Exibe a freq. acumulada da classe
         printf("\t%6.2f %c", c[i].xi, 179);                        // Exibe o ponto médio da classe        
@@ -274,6 +274,9 @@ int main(int argc, char const *argv[])
     printf("\n\n   Media....: %-7.4f", media(c, k, n));                     // Calcula e exibe a média dos dados amostrais
     printf("\n   Moda.....: %-7.2f", moda(c, ac, k, menor));                // Calcula e exibe a moda dos dados amostrais
     printf("\n   Mediana..: %-7.2f", mediana(c, k, ac, menor, n));          // Calcula e exibe a mediana dos dados amostrais
+
+    free(tabela);
+    free(c);
     
     printf("\n\n\n");
     return 0;
