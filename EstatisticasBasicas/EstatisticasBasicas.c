@@ -120,9 +120,49 @@ float moda(Classe *classe, int h, int k, int menor) {
     return moda;
 }
 
+// Cálculo da classe mediana
+int classe_mediana(Classe *classe, int num_amostras) {
+    int classe_mediana = 0;
+    int i = 0;
+    float p;
+
+    p = roundf(num_amostras/2.0);
+    while (classe[i].Fac < p) {
+        i++;
+    }
+    classe_mediana = i+1;
+    return classe_mediana;
+}
+
 // Cálculo da mediana
-float mediana(Classe *classe, int num_classes, int h) {
+float mediana(Classe *classe, int num_classes, int h, int menor, int num_amostras) {
+    float mediana = 0.0;
+    int f;          // Frequência absoluta da classe mediana
+    int fant;       // Frequência acumulada da classe anterior a da mediana
+    int li;         // Limite inferior da classe mediana
+    int c_mediana;  // Indice que indica a classe mediana
+    int p;          // Determina a posição da mediana
+
+    c_mediana = classe_mediana(classe, num_amostras);
+    li = lim_inferior(classe, menor, c_mediana, h);
+    p = roundf(num_amostras/2.0);
+
+    // Determinação da classe mediana acumulada anterior a da classe mediana
+    c_mediana--;
+    if (c_mediana == 0) {       // Indica que a classe mediana é a 1a
+        fant = 0;
+    } else {
+        fant = classe[c_mediana-1].Fac;
+    }
     
+    // Determinação da freq. abssoluta da classe mediana
+    f = classe[c_mediana].F;
+
+    mediana = 1.0*(h*(p - fant));
+    mediana /= f;
+    mediana += 1.0*li;
+
+    return mediana;
 }
 
 // ***** INÍCIO DO PROGRAMA *****
@@ -141,7 +181,6 @@ int main(int argc, char const *argv[])
     Classe *c;          // Cria uma estrutura do tipo Classe
     int Linf, Lsup;     // Limites inferior e superior da classe   
     int fac;            // Variável auxiliar para calcular a freq. acumulada das classes
-    //int c_modal;        // Classe normal
     int esp_char;
     float num;          // Um valor real para auxiliar no cálculo da amplitude de classe (ac)    
     
@@ -231,11 +270,10 @@ int main(int argc, char const *argv[])
     }
     printf("%c", 217);              // Moldura do canto inferior direito
 
-    // Exibição da média, moda, mediana, variância, desvio-padrão e coeficiente de variação
-    //c_modal = classe_modal(c, k);
-    printf("\n\n   Media...: %-7.4f", media(c, k, n));                     // Calcula e exibe a média dos dados amostrais
-    printf("\n   Moda....: %-7.2f", moda(c, ac, k, menor));     // Calcula e exibe a moda dos dados amostrais
-
+    // Exibição da média, moda, mediana, variância, desvio-padrão e coeficiente de variação    
+    printf("\n\n   Media....: %-7.4f", media(c, k, n));                     // Calcula e exibe a média dos dados amostrais
+    printf("\n   Moda.....: %-7.2f", moda(c, ac, k, menor));                // Calcula e exibe a moda dos dados amostrais
+    printf("\n   Mediana..: %-7.2f", mediana(c, k, ac, menor, n));          // Calcula e exibe a mediana dos dados amostrais
     
     printf("\n\n\n");
     return 0;
